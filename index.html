@@ -1,0 +1,96 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>small site</title>
+  <meta name="description" content="The HTML5 Herald">
+  <meta name="author" content="SitePoint">
+
+  <link rel="stylesheet" href="styles.css" type="text/css">
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+
+</head>
+
+<body>
+  <h2 id="title">Mt. Hood Snowpack Data</h2>
+  <div id="line_graph"></div>
+  <script>
+  //set the margins for the outer svg
+  //D3 conventions for margin uses an object
+  const margin = {
+    left: 30,
+    bottom: 20,
+    right: 20,
+    top: 10
+  };
+  const width = 800 - margin.left - margin.right;
+  const height = 400 - margin.top - margin.bottom;
+  //make a function to parse the time values
+  const parseTime = d3.timeParse("%Y-%m-%d");
+
+  //
+  const x = d3.scaleTime().range([0, width]);
+  //invert y range so low values will be on bottom
+  const y = d3.scaleLinear().range([height,0]);
+
+  const draw_line = d3.line()
+        .x(function(d) {
+          //returns a value which fits the scale for x
+          return x(d.date);
+        })
+        //returns a value which fits the scale of y
+        .y(function(d) {
+          return y(d.snowlvl);
+        });
+  //append svg object to the div
+  const svg = d3.select("#line_graph").append("svg")
+        .attr("width", width + margin.left  + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+        //then append a holding group for the lines
+      .append("g")
+          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  //read the data from the 2014-2015 csv file
+  //the first anonymous function is an accessor function, and it returns the values into objects
+  d3.csv("mt_hood_2014-2015.csv", function(d) {
+    //return only the two values we want: date and snowpack level
+    return {
+      date: d.date,
+      snowlvl: +d.snowlvl
+    };
+  }, function(error, data){
+    //error checking
+    if(error) throw error;
+
+    //ensure the data is formatted
+    data.forEach(function(d) {
+      d.date = parseTime(d.date);
+      //D3 CONVENTION: use + to parseInt
+      d["snowlvl"] = +d["snowlvl"];
+    });
+    //define the min and max values of x and y axis (domain)
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+    //the max y value should be the highest snow level found in the data
+    y.domain([0, d3.max(data, function(d) { return d.snowlvl; })]);
+
+    //append the draw_line path to the svg wrapper
+    svg.append("path")
+      .data([data])
+      .attr("class", "first_line")
+      .attr("d", draw_line);
+      // place x axis at bottom
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+    // place y axis on left
+    svg.append("g")
+      .call(d3.axisLeft(y));
+  });
+  //second set of data
+
+  </script>
+
+</body>
+
+</html>
