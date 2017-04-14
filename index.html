@@ -32,6 +32,7 @@
 
   //
   const x = d3.scaleTime().range([0, width]);
+  //const x2 = d3.scaleTime().range([0, width]);
   //invert y range so low values will be on bottom
   const y = d3.scaleLinear().range([height,0]);
 
@@ -44,6 +45,13 @@
         .y(function(d) {
           return y(d.snowlvl);
         });
+  //accessor function, normalizes the data
+  function normalizer(d) {
+    return {
+      date: d.date,
+      snowlvl: +d.snowlvl
+    };
+  }
   //append svg object to the div
   const svg = d3.select("#line_graph").append("svg")
         .attr("width", width + margin.left  + margin.right)
@@ -53,44 +61,98 @@
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
   //read the data from the 2014-2015 csv file
   //the first anonymous function is an accessor function, and it returns the values into objects
-  d3.csv("mt_hood_2014-2015.csv", function(d) {
-    //return only the two values we want: date and snowpack level
-    return {
-      date: d.date,
-      snowlvl: +d.snowlvl
-    };
-  }, function(error, data){
-    //error checking
-    if(error) throw error;
+  // d3.csv("mt_hood_2014-2015_snow.csv", normalizer, function(error, data){
+  //   //error checking
+  //   if(error) throw error;
+  //   console.log("first set: ", data);
+  //   //ensure the data is formatted
+  //   data.forEach(function(d) {
+  //     d.date = parseTime(d.date);
+  //     //D3 CONVENTION: use + to parseInt
+  //     d["snowlvl"] = +d["snowlvl"];
+  //   });
+  //   //define the min and max values of x and y axis (domain)
+  //   x.domain(d3.extent(data, function(d) { return d.date; }));
+  //   //the max y value should be the highest snow level found in the data
+  //   y.domain([0, d3.max(data, function(d) { return d.snowlvl; })]);
+  //
+  //   //append the draw_line path to the svg wrapper
+  //   svg.append("path")
+  //     .data([data])
+  //     .attr("class", "first_line")
+  //     .attr("d", draw_line);
+  //     // place x axis at bottom
+  //   svg.append("g")
+  //     .attr("transform", "translate(0," + height + ")")
+  //     .call(d3.axisBottom(x));
+  //   // place y axis on left
+  //   svg.append("g")
+  //     .call(d3.axisLeft(y));
+  // });
+  //second attempt
+  //should do all the same work but within one function
+  d3.queue()
+    .defer(d3.csv, "mt_hood_2014-2015_snow.csv")
+    .defer(d3.csv, "mt_hood_2016-2017_snow.csv")
+    .await(function(error, file1, file2) {
+        if (error) {
+          console.error("error: " + error);
+        }
+        else {
+          file1.forEach(function(x) {
+            normalizer(x);
+          });
+          file1.forEach(function(d) {
+            d.date = parseTime(d.date);
+            //D3 CONVENTION: use + to parseInt
+            d["snowlvl"] = +d["snowlvl"];
+          });
+          file2.forEach(function(x) {
+            normalizer(x);
+          });
+          file2.forEach(function(d) {
+            d.date = parseTime(d.date);
+            //D3 CONVENTION: use + to parseInt
+            d["snowlvl"] = +d["snowlvl"];
+          });
+          const file1_min_date = d3.extent(file1, function(d) { return d.date; });
+          const file2_max_date = d3.extent(file2, function(d) { return d.date; });
+          console.log("min: ", file1_min_date[0], "max: ", file2_max_date[1]);
+          const total_domain = new Array(file1_min_date[0], file2_max_date[1]);
+          console.log(total_domain);
+          //define the min and max values of x and y axis (domain)
+          //x.domain(d3.extent(file1, function(d) { return d.date; }));
+          x.domain(total_domain);
+          //x2.domain(d3.extent(file2, function(d) { return d.date; }));
+          //the max y value should be the highest snow level found in the data
+          y.domain([0, d3.max(file1, function(d) { return d.snowlvl; })]);
 
-    //ensure the data is formatted
-    data.forEach(function(d) {
-      d.date = parseTime(d.date);
-      //D3 CONVENTION: use + to parseInt
-      d["snowlvl"] = +d["snowlvl"];
-    });
-    //define the min and max values of x and y axis (domain)
-    x.domain(d3.extent(data, function(d) { return d.date; }));
-    //the max y value should be the highest snow level found in the data
-    y.domain([0, d3.max(data, function(d) { return d.snowlvl; })]);
-
-    //append the draw_line path to the svg wrapper
-    svg.append("path")
-      .data([data])
-      .attr("class", "first_line")
-      .attr("d", draw_line);
-      // place x axis at bottom
-    svg.append("g")
-      .attr("transform", "translate(0," + height + ")")
-      .call(d3.axisBottom(x));
-    // place y axis on left
-    svg.append("g")
-      .call(d3.axisLeft(y));
-  });
-  //second set of data
+          //append the draw_line path to the svg wrapper
+          svg.append("path")
+            .data([file1])
+            .attr("class", "first_line")
+            .attr("d", draw_line);
+          svg.append("path")
+              .data([file2])
+              .attr("class", "second_line")
+              .attr("d", draw_line);
+            // place x axis at bottom
+          svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x));
+          // place y axis on left
+          svg.append("g")
+            .call(d3.axisLeft(y));
+          } //end await
+          //console.log(file1, file2);
+        });
 
   </script>
-
+  <script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+     d3.select(".second_line").attr("transform", "translate(-750,0)");
+   });
+</script>
 </body>
 
 </html>
