@@ -1,0 +1,13 @@
+.first_line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+.second_line {
+  fill: none;
+  stroke: red;
+  stroke-width: 2px;
+}
+h2, h3, h4, p, svg {
+  font-family: 'Alegreya Sans', sans-serif;
+}
