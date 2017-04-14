@@ -4,28 +4,33 @@
 <head>
   <meta charset="utf-8">
 
-  <title>small site</title>
-  <meta name="description" content="The HTML5 Herald">
-  <meta name="author" content="SitePoint">
+  <title>Mt. Hood, Oregon Snowfall data (2014/2015 ... 2016/2017)</title>
+  <meta name="description" content="Mt. Hood, Oregon snowpack level line chart">
 
-  <link rel="stylesheet" href="styles.css" type="text/css">
+  <link rel="stylesheet" href="main.css" type="text/css">
+
+  <!--google font-->
+  <link href="https://fonts.googleapis.com/css?family=Alegreya+Sans" rel="stylesheet">
   <script src="https://d3js.org/d3.v4.min.js"></script>
-
+  <script src="script.js"></script>
 </head>
 
 <body>
-  <h2 id="title">Mt. Hood Snowpack Data</h2>
+  <h2 id="title">Mt. Hood Snowpack Data (2014-2015 & 2016-2017)</h2>
+  <h4 id="subtitle">Elevation: 5370 feet, Site # 651</h4>
+  <p>Data from Natural Resource Conservation Service</p>
+  <a href="https://wcc.sc.egov.usda.gov/nwcc/site?sitenum=651"><p>More information</p></a>
   <div id="line_graph"></div>
   <script>
   //set the margins for the outer svg
   //D3 conventions for margin uses an object
   const margin = {
-    left: 30,
-    bottom: 20,
+    left: 50,
+    bottom: 40,
     right: 20,
     top: 10
   };
-  const width = 800 - margin.left - margin.right;
+  const width = 900 - margin.left - margin.right;
   const height = 400 - margin.top - margin.bottom;
   //make a function to parse the time values
   const parseTime = d3.timeParse("%Y-%m-%d");
@@ -51,6 +56,11 @@
       date: d.date,
       snowlvl: +d.snowlvl
     };
+  }
+  function post_data(d) {
+    d.date = parseTime(d.date);
+    //D3 CONVENTION: use + to parseInt
+    d["snowlvl"] = +d["snowlvl"];
   }
   //append svg object to the div
   const svg = d3.select("#line_graph").append("svg")
@@ -100,24 +110,27 @@
         }
         else {
           file1.forEach(function(x) {
+            //normalize data (str to int for snowpack & parse date)
             normalizer(x);
+            post_data(x);
           });
-          file1.forEach(function(d) {
-            d.date = parseTime(d.date);
-            //D3 CONVENTION: use + to parseInt
-            d["snowlvl"] = +d["snowlvl"];
-          });
+          // file1.forEach(function(d) {
+          //   d.date = parseTime(d.date);
+          //   //D3 CONVENTION: use + to parseInt
+          //   d["snowlvl"] = +d["snowlvl"];
+          // });
           file2.forEach(function(x) {
             normalizer(x);
+            post_data(x);
           });
-          file2.forEach(function(d) {
-            d.date = parseTime(d.date);
-            //D3 CONVENTION: use + to parseInt
-            d["snowlvl"] = +d["snowlvl"];
-          });
+          // file2.forEach(function(d) {
+          //   d.date = parseTime(d.date);
+          //   //D3 CONVENTION: use + to parseInt
+          //   d["snowlvl"] = +d["snowlvl"];
+          // });
           const file1_min_date = d3.extent(file1, function(d) { return d.date; });
           const file2_max_date = d3.extent(file2, function(d) { return d.date; });
-          console.log("min: ", file1_min_date[0], "max: ", file2_max_date[1]);
+          //console.log("min: ", file1_min_date[0], "max: ", file2_max_date[1]);
           const total_domain = new Array(file1_min_date[0], file2_max_date[1]);
           console.log(total_domain);
           //define the min and max values of x and y axis (domain)
@@ -136,21 +149,37 @@
               .data([file2])
               .attr("class", "second_line")
               .attr("d", draw_line);
-            // place x axis at bottom
+          console.log(file1)
+          // place x axis at bottom
           svg.append("g")
             .attr("transform", "translate(0," + height + ")")
             .call(d3.axisBottom(x));
+          //label the x axis
+          svg.append("text")
+              .attr("transform", "translate(" + (width/2) + "," + (height + margin.top + 25) + ")")
+              .style("text-anchor", "middle")
+              .text("Date");
           // place y axis on left
           svg.append("g")
             .call(d3.axisLeft(y));
+            //make a label for y axis
+            svg.append("text")
+              //rotate it properly
+              .attr("transform", "rotate(-90)")
+              .attr("y", 0 - margin.left)
+              .attr("x", 0 - (height / 2))
+              .attr("dy", "1em")
+              .style("text-anchor", "middle")
+              .text("Snow-Water Equivlent (Inches)");
+            //TODO: LEGEND
           } //end await
-          //console.log(file1, file2);
         });
 
   </script>
   <script>
   document.addEventListener("DOMContentLoaded", function(event) {
-     d3.select(".second_line").attr("transform", "translate(-750,0)");
+    const secondLine = d3.select(".second_line")
+          .attr("transform", "translate(-750,0)");
    });
 </script>
 </body>
