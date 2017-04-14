@@ -1,5 +1,5 @@
-# Mt. Hood Snow Pack Level Barchart using D3.js
+# Mt. Hood Snow Pack Level Line Chart using D3.js
 
-__To Run: Open a command line and enter: `python -m SimpleHTTPServer`__
+__To Run: Download the repository, then open a command line and `cd` into the directory. After that, enter: `python -m SimpleHTTPServer`.__
 
-__Then use a browser and navigate to localhost:8000__
+__Then use a browser and navigate to `localhost:8000`__

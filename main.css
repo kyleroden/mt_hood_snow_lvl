@@ -1,13 +1,41 @@
+h2, h3, h4, p, svg, li {
+    font-family: 'Alegreya Sans', sans-serif;
+}
+
+ul {
+    list-style: none;
+    padding: 0px;
+}
+
+ul li {
+    float: left;
+    margin-right: 25px;
+}
+
+.legend_color {
+    border: 1px solid black;
+    float: left;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+}
+
+.blue {
+    background-color: steelblue;
+}
+
+.red {
+    background-color: red;
+}
+
 .first_line {
-  fill: none;
-  stroke: steelblue;
-  stroke-width: 2px;
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 2px;
 }
+
 .second_line {
-  fill: none;
-  stroke: red;
-  stroke-width: 2px;
-}
-h2, h3, h4, p, svg {
-  font-family: 'Alegreya Sans', sans-serif;
+    fill: none;
+    stroke: red;
+    stroke-width: 2px;
 }
