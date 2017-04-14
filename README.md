@@ -1,5 +1,5 @@
 # Mt. Hood Snow Pack Level Line Chart using D3.js
 
-__To Run: Download the repository, then open a command line and `cd` into the directory. After that, enter: `python -m SimpleHTTPServer`.__
+To Run: Download the repository, then open a command line and `cd` into the directory. After that, enter: `python -m SimpleHTTPServer`.
 
-__Then use a browser and navigate to `localhost:8000`__
+Then use a browser and navigate to `localhost:8000`.
