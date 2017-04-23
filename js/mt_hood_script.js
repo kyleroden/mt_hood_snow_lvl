@@ -37,6 +37,13 @@
         //D3 CONVENTION: use + to parseInt
         d["snowlvl"] = +d["snowlvl"];
     }
+    //deals with mouse events on the overlay svg
+    function mouse_move_fn(e) {
+      console.log(e.target);
+    }
+    const mouse_mv = (e) => {
+      console.log(e.target);
+    }
     //append svg object to the div
     const svg = d3.select("#line_graph").append("svg")
         .attr("width", width + margin.left + margin.right)
@@ -107,5 +114,23 @@
                     .attr("dy", "1em")
                     .style("text-anchor", "middle")
                     .text("Snow-Water Equivlent (Inches)");
+                //svg group to overlay on graph in order to handle mouseover
+                const focus_group = svg.append("g")
+                    .attr("class", "focus_g")
+                    .style("display", "none");
+                //test the overlay by putting a circle on it
+                focus_group.append("circle")
+                    .attr("r", 10)
+                    .style("stroke", "black");
+                //create an overlay atop the main svg
+                svg.append("rect")
+                    .attr("class", "overlay")
+                    .attr("width", width)
+                    .attr("height", height)
+                    .on("mouseover", () => focus_group.style("display", null) )
+                    .on("mouseout", () => focus_group.style("display","none"))
+                    .on("mousemove", mouse_mv);
+
+
             } //end await
         });
