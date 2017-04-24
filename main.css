@@ -12,7 +12,7 @@ ul li {
     float: left;
     margin-right: 25px;
 }
-/*ensure that the graph clears floats */
+/* ensure that the graph clears floats */
 
 #line_graph {
     clear: both;
