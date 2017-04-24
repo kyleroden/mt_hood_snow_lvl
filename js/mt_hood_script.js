@@ -140,9 +140,10 @@ d3.queue()
                 .on("mousemove", function(e) {
                     //console.log(e.target);
 
-                    console.log("mousemove");
-                    console.log(file1 + file2);
+                    //console.log("mousemove");
+                    //console.log(file1 + file2);
                     //the following code snippet comes from Micah Stubb's project: https://bl.ocks.org/micahstubbs/e4f5c830c264d26621b80b754219ae1b
+                    /*
                     const x0 = x.invert(d3.mouse(this)[0]);
                     const i = bisectDate(file1, x0, 1);
                     const d0 = file1[i - 1];
@@ -150,6 +151,7 @@ d3.queue()
                     const d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     focus_group.attr('transform', `translate(${x(d.date)}, ${y(d.snowlvl)})`);
                     focus_group.select('text').text(d.snowlvl);
+                    */
                   });
             d3.select(".overlay")
                 .style({
@@ -163,7 +165,7 @@ d3.queue()
                     fill: 'none',
                     stroke: 'black'
                 });
-                /*
+
             const mouse_mv = (e) => {
                 console.log(e.target);
                 //the following code snippet comes from Micah Stubb's project: https://bl.ocks.org/micahstubbs/e4f5c830c264d26621b80b754219ae1b
@@ -175,6 +177,6 @@ d3.queue()
                 focus_group.attr('transform', `translate(${x(d.date)}, ${y(d.snowlvl)})`);
                 focus_group.select('text').text(d.snowlvl);
             }
-            */
+            
         } //end await
     });
