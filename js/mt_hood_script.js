@@ -121,8 +121,9 @@ d3.queue()
                 .style("display", "none");
             //test the overlay by putting a circle on it
             focus_group.append("circle")
-                .attr("r", 10)
-                .style("stroke", "black");
+                .attr("r", 5)
+                .style("stroke", "black")
+                .style("opacity", 0.5);
             focus_group.append("text")
                 .attr("x", 15)
                 .attr("dy", ".4em");
