@@ -128,8 +128,6 @@ d3.queue()
             focus_group.append("text")
                 .attr("x", 15)
                 .attr("dy", ".4em");
-            //creating one array of objects from file 1 and 2
-            const data_total = [...file1, ...file2];
             //create an overlay atop the main svg
             svg.append("rect")
                 .attr("class", "overlay")
@@ -140,15 +138,17 @@ d3.queue()
                 .attr("opacity", 0)
                 .on("mouseover", () => focus_group.style("display", null))
                 .on("mouseout", () => focus_group.style("display", "none"))
-                //on moving mouse over svg, display the x value(snow inches)
-                //use concatenated file1 and file2
+                //.on("mousemove", mouse_mv);
                 .on("mousemove", function(e) {
-                    //the following code snippet comes from Micah Stubb's project: https://bl.ocks.org/micahstubbs/e4f5c830c264d26621b80b754219ae1b
+                    //console.log(e.target);
 
+                    console.log("mousemove");
+                    console.log(file1 + file2);
+                    //the following code snippet comes from Micah Stubb's project: https://bl.ocks.org/micahstubbs/e4f5c830c264d26621b80b754219ae1b
                     const x0 = x.invert(d3.mouse(this)[0]);
-                    const i = bisectDate(data_total, x0, 1);
-                    const d0 = data_total[i - 1];
-                    const d1 = data_total[i];
+                    const i = bisectDate(file1, x0, 1);
+                    const d0 = file1[i - 1];
+                    const d1 = file1[i];
                     const d = x0 - d0.date > d1.date - x0 ? d1 : d0;
                     focus_group.attr('transform', `translate(${x(d.date)}, ${y(d.snowlvl)})`);
                     focus_group.select('text').text(d.snowlvl);
