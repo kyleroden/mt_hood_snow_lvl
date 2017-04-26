@@ -1,5 +1,5 @@
 'use strict';
-//set the margins for the outer svg
+//sset the margins for the outer svg
 //D3 conventions for margin uses an object
 const margin = {
     left: 50,
