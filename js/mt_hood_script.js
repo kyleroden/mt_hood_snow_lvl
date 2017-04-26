@@ -41,10 +41,11 @@ function post_data(d) {
     d["snowlvl"] = +d["snowlvl"];
 }
 //deals with mouse events on the overlay svg
+/*
 function mouse_move_fn(e) {
     console.log(e.target);
 }
-
+*/
 //append svg object to the div
 const svg = d3.select("#line_graph").append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -164,7 +165,7 @@ d3.queue()
                     fill: 'none',
                     stroke: 'black'
                 });
-
+                /*
             const mouse_mv = (e) => {
                 console.log(e.target);
                 //the following code snippet comes from Micah Stubb's project: https://bl.ocks.org/micahstubbs/e4f5c830c264d26621b80b754219ae1b
@@ -176,6 +177,6 @@ d3.queue()
                 focus_group.attr('transform', `translate(${x(d.date)}, ${y(d.snowlvl)})`);
                 focus_group.select('text').text(d.snowlvl);
             }
-
+*/
         } //end await
     });
